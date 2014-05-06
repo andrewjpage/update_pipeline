@@ -148,7 +148,7 @@ sub _update_lane
 
     UpdatePipeline::VRTrack::File->new(
       name => $file_metadata->file_location,
-      file_type => 5, 
+      file_type => 6, 
       md5 => $file_metadata->md5 , 
       override_md5 => $self->override_md5, 
       _vrtrack => $self->_vrtrack,

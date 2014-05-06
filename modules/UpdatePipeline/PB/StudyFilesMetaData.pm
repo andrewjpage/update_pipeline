@@ -43,6 +43,8 @@ sub _files_metadata_from_sample_name {
     for my $file_location ( @{$file_locations} ) {
         my $irods_file_metadata = IRODS::File->new( file_location => $file_location )->file_attributes;
 
+        next if(defined($irods_file_metadata->{type}) && $irods_file_metadata->{type} eq "bam");
+        
         my $lane_name = $library_metadata->sample_name;
         if(defined($irods_file_metadata->{run}) && defined($irods_file_metadata->{well}))
         {
