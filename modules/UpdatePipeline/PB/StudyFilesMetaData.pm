@@ -39,7 +39,7 @@ sub _files_metadata_from_sample_name {
     my ( $self, $library_metadata ) = @_;
     
     my @merged_files_metadata;
-    my $file_locations = IRODS::Sample->new( name => $library_metadata->sample_name )->file_locations();
+    my $file_locations = IRODS::Sample->new( name => $library_metadata->sample_ssid )->file_locations();
     for my $file_location ( @{$file_locations} ) {
         my $irods_file_metadata = IRODS::File->new( file_location => $file_location )->file_attributes;
 
@@ -51,16 +51,16 @@ sub _files_metadata_from_sample_name {
         
         # Denormalise
         my $merged_file_metadata = UpdatePipeline::PB::FileMetaData->new(
-            study_name              => $library_metadata->study_name,
-            study_accession_number  => $library_metadata->study_accession_number,
-            library_name            => $library_metadata->library_name,
-            library_ssid            => $library_metadata->library_ssid,
-            sample_name             => $library_metadata->sample_name,
-            sample_accession_number => $library_metadata->sample_accession_number,
-            sample_common_name      => $library_metadata->sample_common_name,
-            supplier_name           => $library_metadata->supplier_name,
-            study_ssid              => $library_metadata->study_ssid,
-            sample_ssid             => $library_metadata->sample_ssid,
+            study_name              => $irods_file_metadata->{study_name},
+            study_accession_number  => $irods_file_metadata->{study_accession_number},
+            library_name            => $irods_file_metadata->{library_name},
+            library_ssid            => $irods_file_metadata->{library_id},
+            sample_name             => $irods_file_metadata->{sample_name},
+            sample_accession_number => $irods_file_metadata->{sample_accession_number},
+            sample_common_name      => $irods_file_metadata->{sample_common_name},
+            supplier_name           => $irods_file_metadata->{sample},
+            study_ssid              => $irods_file_metadata->{study_id},
+            sample_ssid             => $irods_file_metadata->{sample_id},
             lane_name               => $lane_name,
             md5                     => $irods_file_metadata->{md5},
             file_location           => $file_location

@@ -21,7 +21,7 @@ sub _build_irods_query
 {
   my ($self) = @_; 
 
-  return $self->bin_directory . "imeta qu -z seq -d sample = '".$self->name."' |";
+  return $self->bin_directory . "imeta qu -z seq -d sample_id = '".$self->name."' |";
 }
 
 
