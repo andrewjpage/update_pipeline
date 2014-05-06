@@ -24,28 +24,20 @@ use UpdatePipeline::PB::FileMetaData;
 has 'study_name'         => ( is => 'ro', isa      => 'Str', required => 1 );
 has 'dbh'                => ( is => 'ro', required => 1 );
 has 'files_metadata'     => ( is => 'ro', isa      => 'ArrayRef', lazy => 1, builder => '_build_files_metadata' );
-has 'libraries_metadata' => ( is => 'ro', isa      => 'ArrayRef', lazy => 1, builder => '_build_libraries_metadata' );
 
-sub _build_libraries_metadata {
-    my ($self) = @_;
 
-    return Warehouse::LibraryAliquots->new(
-        _dbh       => $self->dbh,
-        study_name => $self->study_name
-    )->libraries_metadata;
-}
-
-sub _files_metadata_from_sample_name {
-    my ( $self, $library_metadata ) = @_;
+sub _build_files_metadata {
+    my ( $self ) = @_;
     
     my @merged_files_metadata;
-    my $file_locations = IRODS::Sample->new( name => $library_metadata->sample_ssid )->file_locations();
+    my $file_locations = IRODS::Study->new( name => study_name )->file_locations();
     for my $file_location ( @{$file_locations} ) {
         my $irods_file_metadata = IRODS::File->new( file_location => $file_location )->file_attributes;
 
+        next unless(defined($irods_file_metadata->{source}) && $irods_file_metadata->{source} eq 'production');
         next if(defined($irods_file_metadata->{type}) && $irods_file_metadata->{type} eq "bam");
         
-        my $lane_name = $library_metadata->sample_name;
+        my $lane_name = $irods_file_metadata->{sample_name};
         if(defined($irods_file_metadata->{run}) && defined($irods_file_metadata->{well}))
         {
            $lane_name = $irods_file_metadata->{run} . '_' . $irods_file_metadata->{well};
@@ -53,16 +45,16 @@ sub _files_metadata_from_sample_name {
         
         # Denormalise
         my $merged_file_metadata = UpdatePipeline::PB::FileMetaData->new(
-            study_name              => defined($irods_file_metadata->{study_name}             )? $irods_file_metadata->{study_name}             : $library_metadata->study_name,
-            study_accession_number  => defined($irods_file_metadata->{study_accession_number} )? $irods_file_metadata->{study_accession_number} : $library_metadata->study_accession_number,
-            library_name            => defined($irods_file_metadata->{library_name}           )? $irods_file_metadata->{library_name}           : $library_metadata->library_name ,
-            library_ssid            => defined($irods_file_metadata->{library_id}             )? $irods_file_metadata->{library_id}             : $library_metadata->library_ssid,
-            sample_name             => defined($irods_file_metadata->{sample_name}            )? $irods_file_metadata->{sample_name}            : $library_metadata->sample_name,
-            sample_accession_number => defined($irods_file_metadata->{sample_accession_number})? $irods_file_metadata->{sample_accession_number}: $library_metadata->sample_accession_number,
-            sample_common_name      => defined($irods_file_metadata->{sample_common_name}     )? $irods_file_metadata->{sample_common_name}     : $library_metadata->sample_common_name,
-            supplier_name           => defined($irods_file_metadata->{sample}                 )? $irods_file_metadata->{sample}                 : $library_metadata->supplier_name,
-            study_ssid              => defined($irods_file_metadata->{study_id}               )? $irods_file_metadata->{study_id}               : $library_metadata->study_ssid,
-            sample_ssid             => defined($irods_file_metadata->{sample_id}              )? $irods_file_metadata->{sample_id}              : $library_metadata->sample_ssid,
+            study_name              => $irods_file_metadata->{study_name}             ,
+            study_accession_number  => $irods_file_metadata->{study_accession_number} ,
+            library_name            => $irods_file_metadata->{library_name}           ,
+            library_ssid            => $irods_file_metadata->{library_id}             ,
+            sample_name             => $irods_file_metadata->{sample_name}            ,
+            sample_accession_number => $irods_file_metadata->{sample_accession_number},
+            sample_common_name      => $irods_file_metadata->{sample_common_name}     ,
+            supplier_name           => $irods_file_metadata->{sample}                 ,
+            study_ssid              => $irods_file_metadata->{study_id}               ,
+            sample_ssid             => $irods_file_metadata->{sample_id}              ,
             lane_name               => $lane_name,
             md5                     => $irods_file_metadata->{md5},
             file_location           => $file_location
@@ -70,16 +62,6 @@ sub _files_metadata_from_sample_name {
         push(@merged_files_metadata, $merged_file_metadata);
     }
     return \@merged_files_metadata;
-}
-
-sub _build_files_metadata {
-    my ($self) = @_;
-    
-    my @files_metadata;
-    for my $library_metadata ( @{ $self->libraries_metadata } ) {
-        push(@files_metadata, @{$self->_files_metadata_from_sample_name($library_metadata)});
-    }
-    return \@files_metadata;
 }
 
 __PACKAGE__->meta->make_immutable;
