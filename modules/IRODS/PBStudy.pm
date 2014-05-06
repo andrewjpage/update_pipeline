@@ -20,7 +20,7 @@ extends 'IRODS::Files';
 sub _build_irods_query
 {
   my ($self) = @_; 
-  return $self->bin_directory . "imeta qu -z seq -d study = '".$self->name."' and source = 'production' |";
+  return $self->bin_directory . "imeta qu -z seq -d study_name = '".$self->name."' and source = 'production' |";
 }
 
 
