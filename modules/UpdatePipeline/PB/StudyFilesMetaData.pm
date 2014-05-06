@@ -19,6 +19,7 @@ use Moose;
 use Warehouse::LibraryAliquots;
 use IRODS::Sample;
 use IRODS::File;
+use IRODS::PBStudy;
 use UpdatePipeline::PB::FileMetaData;
 
 has 'study_name'         => ( is => 'ro', isa      => 'Str', required => 1 );
@@ -30,11 +31,10 @@ sub _build_files_metadata {
     my ( $self ) = @_;
     
     my @merged_files_metadata;
-    my $file_locations = IRODS::Study->new( name => $self->study_name )->file_locations();
+    my $file_locations = IRODS::PBStudy->new( name => $self->study_name )->file_locations();
     for my $file_location ( @{$file_locations} ) {
         my $irods_file_metadata = IRODS::File->new( file_location => $file_location )->file_attributes;
 
-        next unless(defined($irods_file_metadata->{source}) && $irods_file_metadata->{source} eq 'production');
         next if(defined($irods_file_metadata->{type}) && $irods_file_metadata->{type} eq "bam");
         
         my $lane_name = $irods_file_metadata->{sample_name};
