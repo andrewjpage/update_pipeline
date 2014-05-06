@@ -30,7 +30,7 @@ sub _build_files_metadata {
     my ( $self ) = @_;
     
     my @merged_files_metadata;
-    my $file_locations = IRODS::Study->new( name => study_name )->file_locations();
+    my $file_locations = IRODS::Study->new( name => $self->study_name )->file_locations();
     for my $file_location ( @{$file_locations} ) {
         my $irods_file_metadata = IRODS::File->new( file_location => $file_location )->file_attributes;
 
