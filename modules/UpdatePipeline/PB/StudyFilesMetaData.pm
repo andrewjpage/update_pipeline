@@ -51,16 +51,16 @@ sub _files_metadata_from_sample_name {
         
         # Denormalise
         my $merged_file_metadata = UpdatePipeline::PB::FileMetaData->new(
-            study_name              => $irods_file_metadata->{study_name},
-            study_accession_number  => $irods_file_metadata->{study_accession_number},
-            library_name            => $irods_file_metadata->{library_name},
-            library_ssid            => $irods_file_metadata->{library_id},
-            sample_name             => $irods_file_metadata->{sample_name},
-            sample_accession_number => $irods_file_metadata->{sample_accession_number},
-            sample_common_name      => $irods_file_metadata->{sample_common_name},
-            supplier_name           => $irods_file_metadata->{sample},
-            study_ssid              => $irods_file_metadata->{study_id},
-            sample_ssid             => $irods_file_metadata->{sample_id},
+            study_name              => defined($irods_file_metadata->{study_name}             )? $irods_file_metadata->{study_name}             : $library_metadata->study_name,
+            study_accession_number  => defined($irods_file_metadata->{study_accession_number} )? $irods_file_metadata->{study_accession_number} : $library_metadata->study_accession_number,
+            library_name            => defined($irods_file_metadata->{library_name}           )? $irods_file_metadata->{library_name}           : $library_metadata->library_name ,
+            library_ssid            => defined($irods_file_metadata->{library_id}             )? $irods_file_metadata->{library_id}             : $library_metadata->library_ssid,
+            sample_name             => defined($irods_file_metadata->{sample_name}            )? $irods_file_metadata->{sample_name}            : $library_metadata->sample_name,
+            sample_accession_number => defined($irods_file_metadata->{sample_accession_number})? $irods_file_metadata->{sample_accession_number}: $library_metadata->sample_accession_number,
+            sample_common_name      => defined($irods_file_metadata->{sample_common_name}     )? $irods_file_metadata->{sample_common_name}     : $library_metadata->sample_common_name,
+            supplier_name           => defined($irods_file_metadata->{sample}                 )? $irods_file_metadata->{sample}                 : $library_metadata->supplier_name,
+            study_ssid              => defined($irods_file_metadata->{study_id}               )? $irods_file_metadata->{study_id}               : $library_metadata->study_ssid,
+            sample_ssid             => defined($irods_file_metadata->{sample_id}              )? $irods_file_metadata->{sample_id}              : $library_metadata->sample_ssid,
             lane_name               => $lane_name,
             md5                     => $irods_file_metadata->{md5},
             file_location           => $file_location
