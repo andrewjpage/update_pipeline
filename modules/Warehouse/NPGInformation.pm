@@ -17,7 +17,7 @@ $file->populate();
 package Warehouse::NPGInformation;
 use Moose;
 
-has 'file_meta_data'   => ( is => 'rw', isa => 'UpdatePipeline::FileMetaData', required => 1 );
+has 'file_meta_data'   => ( is => 'rw', isa => 'UpdatePipeline::CommonFileMetaData', required => 1 );
 has '_dbh'             => ( is => 'rw',                                        required => 1 );
 
 has '_id_run'          => ( is => 'rw', isa => 'Int');
