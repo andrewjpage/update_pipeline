@@ -13,9 +13,8 @@ my $file_meta_data_container = UpdatePipeline::FileMetaData->new(
 package UpdatePipeline::FileMetaData;
 use Moose;
 use UpdatePipeline::Exceptions;
+extends('UpdatePipeline::CommonFileMetaData');
                                 
-has 'study_name'                       => ( is => 'rw', isa => 'Maybe[Str]');
-has 'study_accession_number'           => ( is => 'rw', isa => 'Maybe[Str]');
 has 'file_md5'                         => ( is => 'rw', isa => 'Maybe[Str]');
 has 'file_type'                        => ( is => 'rw', isa => 'Str',         default    => 'bam' );
 has 'file_name'                        => ( is => 'rw', isa => 'Str',         required   => 1 );
@@ -24,17 +23,9 @@ has 'mate_file_md5'                    => ( is => 'ro', isa => 'Maybe[Str]');
 has 'mate_file_type'                   => ( is => 'ro', isa => 'Maybe[Str]');
 has 'mate_file_name'                   => ( is => 'ro', isa => 'Maybe[Str]' );
 has 'mate_file_name_without_extension' => ( is => 'ro', isa => 'Maybe[Str]');
-has 'library_name'                     => ( is => 'rw', isa => 'Maybe[Str]');
-has 'library_ssid'                     => ( is => 'rw', isa => 'Maybe[Str]');
 has 'total_reads'                      => ( is => 'rw', isa => 'Maybe[Int]');
-has 'sample_name'                      => ( is => 'rw', isa => 'Maybe[Str]');
-has 'sample_accession_number'          => ( is => 'rw', isa => 'Maybe[Str]');
-has 'sample_common_name'               => ( is => 'rw', isa => 'Maybe[Str]');
-has 'supplier_name'                    => ( is => 'rw', isa => 'Maybe[Str]');
 has 'lane_is_paired_read'              => ( is => 'rw', isa => 'Bool',        default    => 1 );
 has 'lane_manual_qc'                   => ( is => 'rw', isa => 'Str',         default    => '-');
-has 'study_ssid'                       => ( is => 'rw', isa => 'Maybe[Int]');
-has 'sample_ssid'                      => ( is => 'rw', isa => 'Maybe[Int]');
 has 'fragment_size_from'               => ( is => 'rw', isa => 'Maybe[Int]' );
 has 'fragment_size_to'                 => ( is => 'rw', isa => 'Maybe[Int]' );
 has 'id_run'                           => ( is => 'rw', isa => 'Maybe[Int]' ); 

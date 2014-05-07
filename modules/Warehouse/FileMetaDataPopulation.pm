@@ -23,7 +23,7 @@ use Warehouse::NPGInformation;
 use Warehouse::NPGPlexInformation;
 use Warehouse::Request;
 
-has 'file_meta_data'   => ( is => 'rw', isa => 'UpdatePipeline::FileMetaData', required => 1 );
+has 'file_meta_data'   => ( is => 'rw', isa => 'UpdatePipeline::CommonFileMetaData', required => 1 );
 has '_dbh'             => ( is => 'rw',                                        required => 1 );
 
 # this is for data that should normally be in IRODs but isnt so it needs to be looked up (MySQL intensive)
