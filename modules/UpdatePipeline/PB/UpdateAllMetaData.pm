@@ -94,7 +94,7 @@ sub update
   for my $study_name (@{$self->study_names})
   {
     for my $file_metadata (@{$self->_generate_study_files_metadata($study_name )}) {
-      $self->_post_populate_file_metadata($file_metadata) unless($self->dont_use_warehouse);
+      #$self->_post_populate_file_metadata($file_metadata) unless($self->dont_use_warehouse);
       
       if ($self->taxon_id && defined $self->species_name) {
       	$file_metadata->sample_common_name($self->species_name);
