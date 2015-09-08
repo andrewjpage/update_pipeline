@@ -71,6 +71,26 @@ ok my $file_metadata_sample_name_with_underscore_nochange = UpdatePipeline::File
 ), 'file meta data which should be the same as the lane metadata';
 is 0, UpdatePipeline::UpdateLaneMetaData->new(lane_meta_data => $lane_metadata, file_meta_data => $file_metadata_sample_name_with_underscore_nochange )->update_required(), 'sample name with underscores should not trigger change';
 
+
+
+ok my $file_metadata_sample_name_with_minus_change = UpdatePipeline::FileMetaData->new(
+  study_name              => 'My project',
+  file_md5                => 'abc1231343432432432',
+  file_name               => 'myfile.bam',
+  file_name_without_extension  => 'myfile',
+  library_name            => 'My library name',
+  library_ssid            => 123,
+  total_reads             => 100000,
+  sample_name             => 'My-name',
+  sample_accession_number => "ABC123",
+  study_accession_number  => "EFG456",
+  study_ssid              => 1234,
+  sample_common_name      => "SomeBacteria",
+), 'file meta data which should be the same as the lane metadata';
+throws_ok {UpdatePipeline::UpdateLaneMetaData->new(lane_meta_data => $lane_metadata, file_meta_data => $file_metadata_sample_name_with_minus_change )->update_required()} qr /myfile/, 'sample name with minus should trigger change';
+
+
+
 ok my $file_metadata_with_sample_name_change = UpdatePipeline::FileMetaData->new(
   study_name              => 'My project',
   file_md5                => 'abc1231343432432432',

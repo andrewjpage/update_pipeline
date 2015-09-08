@@ -179,9 +179,9 @@ sub _compare_file_metadata_with_vrtrack_lane_metadata
   return "missing_total_reads_in_tracking"  unless defined($lane_metadata->{total_reads});
   
   my $f_sample_name = $file_metadata->sample_name;
-  $f_sample_name =~ s/\W/_/g;
+  $f_sample_name =~ s/[^A-Za-z0-9-_]/_/g;
   my $l_sample_name = $lane_metadata->{sample_name};
-  $l_sample_name =~ s/\W/_/g;
+  $l_sample_name =~ s/[^A-Za-z0-9-_]/_/g;
   
   if( defined($f_sample_name) && $f_sample_name ne $l_sample_name)
   {

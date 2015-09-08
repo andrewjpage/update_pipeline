@@ -123,7 +123,7 @@ sub _normalise_sample_name
 {
   my ($self, $sample_name) = @_;
   $sample_name || return;
-  $sample_name =~ s/\W/_/g;
+  $sample_name =~ s/[^A-Za-z0-9-_]/_/g;
   return $sample_name;
 }
 
